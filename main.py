@@ -1,15 +1,12 @@
-import asyncio
 import queue
 import shutil
 import subprocess
 from contextlib import asynccontextmanager
-import os
 
 from dotenv import dotenv_values
 from fastapi import FastAPI
 
 from .routers import sandbox
-from .sandbox import judge
 
 
 @asynccontextmanager
@@ -18,7 +15,6 @@ async def lifespan(app: FastAPI):
     app.state.available_box = set()
     app.state.judging = {}
     app.state.waiting = queue.Queue()
-    asyncio.create_task(judge.sandbox_queue(app.state))
 
     SANDBOX_NUMBER = dotenv_values('.env')['SANDBOX_NUMBER']
     for i in range(int(SANDBOX_NUMBER)):

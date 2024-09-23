@@ -1,27 +1,14 @@
-import asyncio
 import shutil
-import threading
 import time
 import uuid
 
 import git
 
-lock = threading.Lock()
 
-
-async def sandbox_queue(state):
-    if lock.acquire(blocking=False):
-        while True:
-            if len(state.available_box) == 0 or state.waiting.empty():
-                await asyncio.sleep(1)
-
-            print(f'Available sandboxes: {state.available_box}')
-            tasks = []
-            while not state.waiting.empty() and len(state.available_box) != 0:
-                sandbox_number = state.available_box.pop()
-                repo_url = state.waiting.get_nowait().url
-                tasks.append(asyncio.to_thread(judge, state, sandbox_number, repo_url))
-            await asyncio.gather(*tasks)
+def check_available(state):
+    if len(state.available_box) == 0 or state.waiting.empty():
+        return
+    judge(state, state.available_box.pop(), state.waiting.get_nowait().url)
 
 
 def judge(state, sandbox_number: int, repo_url: str):
@@ -40,4 +27,5 @@ def judge(state, sandbox_number: int, repo_url: str):
     time.sleep(1)
     shutil.rmtree(repo_folder)
     state.available_box.add(sandbox_number)
+    check_available(state)
     return {'status': 'judged'}
