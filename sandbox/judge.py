@@ -1,4 +1,5 @@
 import shutil
+import subprocess
 import time
 
 import git
@@ -14,7 +15,8 @@ def check_available(state):
 
 
 def judge(state, sandbox_number: int, task: submission):
-    def end_judging(sandbox_number):
+    def end_judging(repo_folder):
+        shutil.rmtree(repo_folder)
         state.judging[sandbox_number] = None
         state.available_box.add(sandbox_number)
         check_available(state)
@@ -27,10 +29,28 @@ def judge(state, sandbox_number: int, task: submission):
     try:
         git.Repo.clone_from(task.url, repo_folder)
     except git.exc.GitCommandError as e:
-        end_judging(sandbox_number)
+        end_judging(repo_folder)
         return {'status': 'error', 'message': str(e.stderr).split('\n')[2]}
     # do some judging
-    time.sleep(10)
-    shutil.rmtree(repo_folder)
-    end_judging(sandbox_number)
+    try:
+        subprocess.run(
+            [
+                'isolate',
+                '--box-id',
+                str(sandbox_number),
+                '--processes',
+                '--full-env',
+                '--run',
+                '--',
+                '/usr/bin/echo',
+                'Hello, World!',
+            ],
+            cwd=repo_folder,
+            timeout=1,
+        )
+    except subprocess.TimeoutExpired:
+        print(f'Timeout for {task.url} in sandbox {sandbox_number}')
+        end_judging(repo_folder)
+        return {'status': 'timeout'}
+    end_judging(repo_folder)
     return {'status': 'judged'}
