@@ -1,31 +1,36 @@
 import shutil
 import time
-import uuid
 
 import git
+
+from ..models.sandbox_model import submission
 
 
 def check_available(state):
     if len(state.available_box) == 0 or state.waiting.empty():
         return
-    judge(state, state.available_box.pop(), state.waiting.get_nowait().url)
+    next_task = state.waiting.get_nowait()
+    judge(state, state.available_box.pop(), next_task.url, next_task.uuid)
 
 
-def judge(state, sandbox_number: int, repo_url: str):
-    print(f'Judging {repo_url} in sandbox {sandbox_number}')
-    state.judging[sandbox_number] = repo_url
+def judge(state, sandbox_number: int, task: submission):
+    def end_judging(sandbox_number):
+        state.judging[sandbox_number] = None
+        state.available_box.add(sandbox_number)
+        check_available(state)
 
-    # print(repo_url)
-    repo_name = uuid.uuid4()
-    repo_folder = f'./tmp_repo/{repo_name}'
-    # print(repo_name)
+    print(f'Judging {task.url} in sandbox {sandbox_number}')
+    state.judging[sandbox_number] = task.url
+
+    repo_name = task.uuid
+    repo_folder = f'/tmp/sandbox-api/{repo_name}'
     try:
-        git.Repo.clone_from(repo_url, repo_folder)
+        git.Repo.clone_from(task.url, repo_folder)
     except git.exc.GitCommandError as e:
+        end_judging(sandbox_number)
         return {'status': 'error', 'message': str(e.stderr).split('\n')[2]}
     # do some judging
-    time.sleep(1)
+    time.sleep(10)
     shutil.rmtree(repo_folder)
-    state.available_box.add(sandbox_number)
-    check_available(state)
+    end_judging(sandbox_number)
     return {'status': 'judged'}
