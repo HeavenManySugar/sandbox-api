@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
     for i in range(int(SANDBOX_NUMBER)):
         print(f'Cleaning up sandbox {i}')
         cleanup_sandbox(box_id=i, cg=ENABLE_CGROUP)
-    shutil.rmtree('/tmp/sandbox-api', ignore_errors=True)
+    # shutil.rmtree('/tmp/sandbox-api', ignore_errors=True)
 
 
 app = FastAPI(lifespan=lifespan)

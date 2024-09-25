@@ -63,7 +63,7 @@ class sandbox:
         self.cwd = f'/var/local/lib/isolate/{box_id}/box'
         self.cg = cg
 
-    def run(self, command: list, timeout: int, mem_kb: int = 256262144):
+    def run(self, command: list, timeout: int = 10, mem_kb: int = 256262144):
         mem_setting = ('--mem', str(mem_kb)) + (('--cg-mem', str(mem_kb)) if self.cg else ())
         cg_setting = ('--cg',) if self.cg else ()
         print(mem_setting)
