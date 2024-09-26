@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI):
     ENABLE_CGROUP = dotenv_values('.env')['ENABLE_CGROUP']
     for i in range(int(SANDBOX_NUMBER)):
         print(f'Initializing sandbox {i}')
-        r = init_sandbox(box_id=i, cg=ENABLE_CGROUP)
+        r = init_sandbox(box_id=i, cg=(ENABLE_CGROUP == 'True'))
         if r.returncode != 0:
             print(f'Error initializing sandbox {i}')
             print(r.stderr)
@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
     # Do something at the end of the lifespan
     for i in range(int(SANDBOX_NUMBER)):
         print(f'Cleaning up sandbox {i}')
-        cleanup_sandbox(box_id=i, cg=ENABLE_CGROUP)
+        cleanup_sandbox(box_id=i, cg=(ENABLE_CGROUP == 'True'))
     # shutil.rmtree('/tmp/sandbox-api', ignore_errors=True)
 
 

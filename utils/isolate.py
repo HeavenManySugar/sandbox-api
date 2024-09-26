@@ -5,14 +5,14 @@ import subprocess
 def init_sandbox(box_id: int, cg: bool = False):
     cg_setting = ('--cg',) if cg else ()
     return subprocess.run(
-        ['isolate', '--init', '-b', str(box_id), *cg_setting], capture_output=True
+        ['isolate', '--init', '-b', str(box_id), *cg_setting], capture_output=True, text=True
     )
 
 
 def cleanup_sandbox(box_id: int, cg: bool = False):
     cg_setting = ('--cg',) if cg else ()
     return subprocess.run(
-        ['isolate', '--cleanup', '-b', str(box_id), *cg_setting], capture_output=True
+        ['isolate', '--cleanup', '-b', str(box_id), *cg_setting], capture_output=True, text=True
     )
 
 
@@ -66,7 +66,6 @@ class sandbox:
     def run(self, command: list, timeout: int = 10, mem_kb: int = 256262144):
         mem_setting = ('--mem', str(mem_kb)) + (('--cg-mem', str(mem_kb)) if self.cg else ())
         cg_setting = ('--cg',) if self.cg else ()
-        print(mem_setting)
         try:
             r = subprocess.run(
                 [
