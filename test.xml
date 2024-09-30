@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="38" failures="0" disabled="0" errors="0" time="0" timestamp="2024-09-30T17:02:58.249" name="AllTests">
+  <testsuite name="CheckPoint1" tests="6" failures="0" disabled="0" skipped="0" errors="0" time="0" timestamp="2024-09-30T17:02:58.249">
+    <testcase name="TestDieselEnergyConstructorShouldHaveCorrectValue" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint1" />
+    <testcase name="TestDieselEnergyGetDistanceShouldHaveCorrectDistance" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint1" />
+    <testcase name="TestDieselEnergyGetArrivalTimeShouldHaveCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint1" />
+    <testcase name="TestElectricEnergyConstructorShouldHaveCorrectValue" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint1" />
+    <testcase name="TestElectricEnergyGetDistanceShouldHaveCorrectDistance" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint1" />
+    <testcase name="TestElectricEnergyGetArrivalTimeShouldHaveCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint1" />
+  </testsuite>
+  <testsuite name="CheckPoint2" tests="9" failures="0" disabled="0" skipped="0" errors="0" time="0" timestamp="2024-09-30T17:02:58.249">
+    <testcase name="TestTicketInfoConstructorShouldSetupValueCorrectly" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestTicketInfoGetPriceShouldReturnCorrectPrice" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestReserveInfoConstructorShouldSetupValueCorrectly" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestReserveTicketInfoConstructorShouldSetupValueCorrectly" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestReserveTicketGetStartStationShouldReturnCorrectStation" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestReserveTicketGetEndStationShouldReturnCorrectStation" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestReserveTicketGetPriceShouldReturnCorrectPrice" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestReserveTicketGetReserveInfoShouldReturnCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+    <testcase name="TestReserveTicketWithMultipleTicketShouldReturnCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint2" />
+  </testsuite>
+  <testsuite name="CheckPoint3" tests="5" failures="0" disabled="0" skipped="0" errors="0" time="0" timestamp="2024-09-30T17:02:58.249">
+    <testcase name="TestTrainConstructorShouldHaveCorrectTrain" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint3" />
+    <testcase name="TestTrainReserveSeatShouldHaveCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint3" />
+    <testcase name="TestTrainReserveSeatWithMultiplePollShouldHaveCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint3" />
+    <testcase name="TestTrainGetArrivalTimeShouldHaveCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint3" />
+    <testcase name="TestTrainGetDistanceShouldHaveCorrectDistance" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint3" />
+  </testsuite>
+  <testsuite name="CheckPoint4" tests="14" failures="0" disabled="0" skipped="0" errors="0" time="0" timestamp="2024-09-30T17:02:58.249">
+    <testcase name="TestLocalTrainConstructorShouldHaveCorrectTrain" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestLocalTrainGetTicketShouldHaveCorrectTicket" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestTrainGetArrivalTimeShouldHaveCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestLocalTrainGetDistanceShouldHaveCorrectDistance" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestExpressTrainConstructorShouldHaveCorrectTrain" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestExpressTrainReserveSeatShouldHaveCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestExpressTrainReserveSeatWithMultiplePollShouldHaveCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestExpressTrainGetArrivalTimeShouldHaveCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestExpressTrainGetDistanceShouldHaveCorrectDistance" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestTouristTrainConstructorShouldHaveCorrectTrain" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestTouristTrainReserveSeatShouldHaveCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestTouristTrainReserveSeatWithMultiplePollShouldHaveCorrectReserveInfo" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestTouristTrainGetArrivalTimeShouldHaveCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+    <testcase name="TestTouristTrainGetDistanceShouldHaveCorrectDistance" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint4" />
+  </testsuite>
+  <testsuite name="CheckPoint5" tests="4" failures="0" disabled="0" skipped="0" errors="0" time="0" timestamp="2024-09-30T17:02:58.249">
+    <testcase name="TestTrainSystemConstructorShouldSetupTrainCorrectly" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint5" />
+    <testcase name="TestTrainSystemGetTrainShouldReturnCorrectTrain" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint5" />
+    <testcase name="TestTrainSystemGetTotalArrivalTimeShouldReturnCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint5" />
+    <testcase name="TestTrainSystemGetTotalDistanceShouldReturnCorrectArrivalTime" status="run" result="completed" time="0" timestamp="2024-09-30T17:02:58.249" classname="CheckPoint5" />
+  </testsuite>
+</testsuites>
