@@ -32,7 +32,7 @@ cmake --build "$1/build"
 # 尋找所有的ut*執行檔，然後執行
 for test in $(find "$1/build" -name "ut*" ! -name "*.*")
 do
-    $test --gtest_output=json:"$1/build/$(basename $test).json" > /dev/null; echo Return $?
-    valgrind --error-exitcode=2 --track-origins=yes --leak-check=full --log-fd=9 9>$1/build/$(basename $test).log $test > /dev/null
-
+    $test --gtest_output=json:"./tmp/isolate-runner/$(basename $test).json" > /dev/null; echo Return $?
+    valgrind --error-exitcode=2 --track-origins=yes --leak-check=full --log-fd=9 9>./tmp/isolate-runner/$(basename $test).log $test > /dev/null
+    python3 ./grp-parser.py ./tmp/isolate-runner/$(basename $test).json
 done
