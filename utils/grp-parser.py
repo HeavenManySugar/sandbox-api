@@ -24,7 +24,7 @@ class grp_parser:
         passed_tests = []
         failures_tests = []
         result = (
-            text2art('NTUT-OOPLOJ', font='lildevil') + '\n'
+            text2art('NTUT-OOPOJ', font='lildevil') + '\n'
             f'{colorize(text="[==========]")} Running {self.data["tests"]} tests from '
             f'{len(testsuites)} test suites.\n'
             f'{colorize(text="[----------]")} Global test environment set-up.\n'
