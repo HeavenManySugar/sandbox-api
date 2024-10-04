@@ -1,4 +1,5 @@
 import shutil
+import threading
 
 import git
 from dotenv import dotenv_values
@@ -7,12 +8,17 @@ from ..models.sandbox_model import submission
 from ..utils.cmake import get_cmake_build_command, get_cmake_make_command
 from ..utils.isolate import sandbox, sandbox_result
 
+lock = threading.Lock()
+
 
 def check_available(state):
-    if len(state.available_box) == 0 or state.waiting.empty():
-        return
-    next_task = state.waiting.get_nowait()
-    judge(state, state.available_box.pop(), next_task.url, next_task.uuid)
+    if lock.acquire(blocking=True):
+        print('Checking available box')
+        if len(state.available_box) == 0 or state.waiting.empty():
+            return
+        next_task = state.waiting.get_nowait()
+        lock.release()
+        judge(state, state.available_box.pop(), next_task)
 
 
 def judge(state, box_id: int, task: submission):
@@ -38,7 +44,7 @@ def judge(state, box_id: int, task: submission):
     box = sandbox(box_id, dotenv_values('.env')['ENABLE_CGROUP'] == 'True')
     result_build: sandbox_result = box.run(get_cmake_build_command(internal_folder))
     print(result_build)
-    result_make: sandbox_result = box.run(get_cmake_make_command(internal_folder), timeout=60)
+    result_make: sandbox_result = box.run(get_cmake_make_command(internal_folder), timeout=120)
     print(result_make)
     end_judging(repo_folder)
     return {'status': 'judged'}
