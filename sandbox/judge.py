@@ -18,8 +18,9 @@ def check_available(state):
         if len(state.available_box) == 0 or state.waiting.empty():
             return
         next_task = state.waiting.get_nowait()
+        next_box = state.available_box.pop()
         lock.release()
-        judge(state, state.available_box.pop(), next_task)
+        judge(state, next_box, next_task)
 
 
 def judge(state, box_id: int, task: submission):
@@ -27,6 +28,7 @@ def judge(state, box_id: int, task: submission):
         # shutil.rmtree(repo_folder, ignore_errors=True)
         state.judging[box_id] = None
         state.available_box.add(box_id)
+        print(f'remain {len(state.waiting.queue)} tasks')
         check_available(state)
 
     print(f'Judging {task.url} in sandbox {box_id}')
