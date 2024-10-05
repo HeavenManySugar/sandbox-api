@@ -1,5 +1,6 @@
 import re
 import subprocess
+from typing import Optional
 
 
 def init_sandbox(box_id: int, cg: bool = False):
@@ -63,9 +64,12 @@ class sandbox:
         self.cwd = f'/var/local/lib/isolate/{box_id}/box'
         self.cg = cg
 
-    def run(self, command: list, timeout: int = 10, mem_kb: int = 256262144):
-        mem_setting = ('--mem', str(mem_kb)) + (('--cg-mem', str(mem_kb)) if self.cg else ())
+    def run(self, command: list, timeout: Optional[int] = None, mem_kb: Optional[int] = None):
+        mem_setting = ()
+        if mem_kb:
+            mem_setting = ('--mem', str(mem_kb)) + (('--cg-mem', str(mem_kb)) if self.cg else ())
         cg_setting = ('--cg',) if self.cg else ()
+        timeout_setting = ('--time', str(timeout)) if timeout else ()
         try:
             r = subprocess.run(
                 [
@@ -75,12 +79,11 @@ class sandbox:
                     '--processes',
                     '--full-env',
                     '--run',
-                    '--time',
-                    str(timeout),
                     '--meta',
                     self.cwd + '/meta',
                     *mem_setting,
                     *cg_setting,
+                    *timeout_setting,
                     '--',
                     *command,
                 ],

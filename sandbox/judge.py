@@ -1,11 +1,12 @@
 import shutil
+import subprocess
 import threading
 
 import git
 from dotenv import dotenv_values
 
 from ..models.sandbox_model import submission
-from ..utils.cmake import get_cmake_build_command, get_cmake_make_command
+from ..utils.grp_parser import grp_parser
 from ..utils.isolate import sandbox, sandbox_result
 
 lock = threading.Lock()
@@ -23,7 +24,7 @@ def check_available(state):
 
 def judge(state, box_id: int, task: submission):
     def end_judging(repo_folder):
-        shutil.rmtree(repo_folder, ignore_errors=True)
+        # shutil.rmtree(repo_folder, ignore_errors=True)
         state.judging[box_id] = None
         state.available_box.add(box_id)
         check_available(state)
@@ -42,9 +43,16 @@ def judge(state, box_id: int, task: submission):
         return
     # do some judging
     box = sandbox(box_id, dotenv_values('.env')['ENABLE_CGROUP'] == 'True')
-    result_build: sandbox_result = box.run(get_cmake_build_command(internal_folder))
-    print(result_build)
-    result_make: sandbox_result = box.run(get_cmake_make_command(internal_folder), timeout=120)
-    print(result_make)
+    subprocess.run(['cp', './scripts/test.sh', f'{repo_folder}/scripts/test.sh'])
+
+    result_script: sandbox_result = box.run(
+        [f'{internal_folder}/scripts/test.sh', internal_folder, 'ut_all']
+    )
+    print(result_script)
+    # 這裡未來可以用utils.grp_parser.parse()來解析結果
+    # subprocess.run(['./scripts/report.sh', f'{repo_folder}/grp', 'ut_all'])
+    grp = grp_parser(f'{repo_folder}/grp/ut_all.json')
+    print(grp.parser(color=True))
+    print(f'Judged {task.url} in sandbox {box_id} score: {grp.get_score()}')
     end_judging(repo_folder)
     return {'status': 'judged'}
