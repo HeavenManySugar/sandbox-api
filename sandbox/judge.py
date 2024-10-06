@@ -46,7 +46,7 @@ class JudgeSystem:
             return 0
 
     def check_available(self):
-        if self.__lock.acquire(blocking=True):
+        if self.__lock.acquire(blocking=False):
             print('Checking available box')
             if len(self.__state.available_box) == 0 or self.__waiting.empty():
                 self.__lock.release()
