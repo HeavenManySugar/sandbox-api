@@ -25,7 +25,7 @@ class JudgeSystem:
         return len(self.__waiting.queue)
 
     def get_judging_length(self):
-        return len(self.__judging)
+        return len(list(filter(None, self.__judging.values())))
 
     def add_task(self, background_tasks: BackgroundTasks, task: submission):
         if len(self.__state.available_box) == 0:
@@ -40,6 +40,7 @@ class JudgeSystem:
         if self.__lock.acquire(blocking=True):
             print('Checking available box')
             if len(self.__state.available_box) == 0 or self.__waiting.empty():
+                self.__lock.release()
                 return
             next_task = self.__waiting.get_nowait()
             next_box = self.__state.available_box.pop()
