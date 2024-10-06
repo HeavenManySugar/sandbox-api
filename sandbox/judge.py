@@ -22,10 +22,10 @@ class JudgeSystem:
         self.__judging = {}
         self.__waiting = queue.Queue()
 
-    def get_waiting_length(self):
+    async def get_waiting_length(self):
         return len(self.__waiting.queue)
 
-    def get_judging_length(self):
+    async def get_judging_length(self):
         return len(list(filter(None, self.__judging.values())))
 
     def add_task(self, background_tasks: BackgroundTasks, task: submission):

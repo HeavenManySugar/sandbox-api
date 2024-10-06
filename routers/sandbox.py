@@ -12,13 +12,13 @@ async def heartbeat(request: Request):
     return {
         'status': 'ok',
         'available_sandboxes': len(request.app.state.available_box),
-        'waiting_tasks': request.app.state.judge_system.get_waiting_length(),
-        'judging_tasks': request.app.state.judge_system.get_judging_length(),
+        'waiting_tasks': await request.app.state.judge_system.get_waiting_length(),
+        'judging_tasks': await request.app.state.judge_system.get_judging_length(),
     }
 
 
 @router.post('/judge')
-async def judgeRepo(repo_url: GitUrl, background_tasks: BackgroundTasks, request: Request):
+def judgeRepo(repo_url: GitUrl, background_tasks: BackgroundTasks, request: Request):
     task = submission(url=repo_url.url, uuid=uuid.uuid4())
     result = request.app.state.judge_system.add_task(background_tasks, task)
     match result:
@@ -35,7 +35,7 @@ async def judgeRepo(repo_url: GitUrl, background_tasks: BackgroundTasks, request
 
 
 @router.get('/result/{uuid}')
-async def get_result(uuid: uuid.UUID, request: Request):
+def get_result(uuid: uuid.UUID, request: Request):
     try:
         return request.app.state.judge_system.get_result(uuid)
     except FileNotFoundError:
@@ -43,7 +43,7 @@ async def get_result(uuid: uuid.UUID, request: Request):
 
 
 @router.get('/result/{uuid}/valgrind')
-async def get_valgrind(uuid: uuid.UUID, request: Request):
+def get_valgrind(uuid: uuid.UUID, request: Request):
     try:
         return request.app.state.judge_system.get_valgrind(uuid)
     except FileNotFoundError:
@@ -51,7 +51,7 @@ async def get_valgrind(uuid: uuid.UUID, request: Request):
 
 
 @router.get('/result/{uuid}/sandbox/grp/json')
-async def get_grp_json(uuid: uuid.UUID, request: Request):
+def get_grp_json(uuid: uuid.UUID, request: Request):
     try:
         return request.app.state.judge_system.get_grp_json(uuid)
     except FileNotFoundError:
@@ -59,7 +59,7 @@ async def get_grp_json(uuid: uuid.UUID, request: Request):
 
 
 @router.get('/result/{uuid}/sandbox/grp/text')
-async def get_grp_text(uuid: uuid.UUID, request: Request):
+def get_grp_text(uuid: uuid.UUID, request: Request):
     try:
         return request.app.state.judge_system.get_grp_text(uuid)
     except FileNotFoundError:
@@ -67,7 +67,7 @@ async def get_grp_text(uuid: uuid.UUID, request: Request):
 
 
 @router.get('/result/{uuid}/sandbox/meta')
-async def get_meta(uuid: uuid.UUID, request: Request):
+def get_meta(uuid: uuid.UUID, request: Request):
     try:
         return request.app.state.judge_system.get_meta(uuid)
     except FileNotFoundError:
