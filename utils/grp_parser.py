@@ -105,6 +105,9 @@ class grp_parser:
         result += text2art(f'Score: {self.__score:.1f}', font='doom')
         return result
 
+    def get_score(self):
+        return self.__score
+
 
 def __main():
     if len(sys.argv) != 2:

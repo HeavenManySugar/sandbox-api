@@ -1,30 +1,74 @@
 import uuid
 
-from fastapi import APIRouter, BackgroundTasks, Request
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 
 from ..models.sandbox_model import GitUrl, submission
-from ..sandbox import judge as judge_sandbox
 
 router = APIRouter()
 
 
 @router.get('/sandbox/heartbeat')
 async def heartbeat(request: Request):
-    return {'status': 'ok', 'available_sandboxes': len(request.app.state.available_box)}
+    return {
+        'status': 'ok',
+        'available_sandboxes': len(request.app.state.available_box),
+        'waiting_tasks': request.app.state.judge_system.get_waiting_length(),
+        'judging_tasks': request.app.state.judge_system.get_judging_length(),
+    }
 
 
 @router.post('/judge')
 async def judgeRepo(repo_url: GitUrl, background_tasks: BackgroundTasks, request: Request):
     task = submission(url=repo_url.url, uuid=uuid.uuid4())
-    if len(request.app.state.available_box) == 0:
-        request.app.state.waiting.put_nowait(task)
-        return {
-            'status': 'waiting',
-            'position': request.app.state.waiting.qsize(),
-            'uuid': task.uuid,
-        }
-    else:
-        sandbox_number = request.app.state.available_box.pop()
+    result = request.app.state.judge_system.add_task(background_tasks, task)
+    match result:
+        case 0:
+            return {'status': 'judging', 'uuid': task.uuid}
+        case 1:
+            return {
+                'status': 'waiting',
+                'position': request.app.state.judge_system.get_waiting_length(),
+                'uuid': task.uuid,
+            }
+        case 2:
+            raise HTTPException(status_code=400, detail='Invalid repository URL')
 
-        background_tasks.add_task(judge_sandbox.judge, request.app.state, sandbox_number, task)
-        return {'status': 'judging', 'uuid': task.uuid}
+
+@router.get('/result/{uuid}')
+async def get_result(uuid: uuid.UUID, request: Request):
+    try:
+        return request.app.state.judge_system.get_result(uuid)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail='Result not found')
+
+
+@router.get('/result/{uuid}/valgrind')
+async def get_valgrind(uuid: uuid.UUID, request: Request):
+    try:
+        return request.app.state.judge_system.get_valgrind(uuid)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail='Result not found')
+
+
+@router.get('/result/{uuid}/sandbox/grp/json')
+async def get_grp_json(uuid: uuid.UUID, request: Request):
+    try:
+        return request.app.state.judge_system.get_grp_json(uuid)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail='Result not found')
+
+
+@router.get('/result/{uuid}/sandbox/grp/text')
+async def get_grp_text(uuid: uuid.UUID, request: Request):
+    try:
+        return request.app.state.judge_system.get_grp_text(uuid)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail='Result not found')
+
+
+@router.get('/result/{uuid}/sandbox/meta')
+async def get_meta(uuid: uuid.UUID, request: Request):
+    try:
+        return request.app.state.judge_system.get_meta(uuid)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail='Result not found')

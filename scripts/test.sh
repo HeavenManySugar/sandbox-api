@@ -26,13 +26,23 @@ fi
 
 # build the project
 cmake -S "$1" -B "$1/build" -G Ninja -DCMAKE_BUILD_TYPE=Debug -DFETCH_GOOGLETEST=OFF
-cmake --build "$1/build"
+
+if [ -z "$2" ]
+then
+    cmake --build "$1/build" --clean-first
+else
+    cmake --build "$1/build" --clean-first --target "$2"
+fi
 
 # run the tests and output googletest results
 # 尋找所有的ut*執行檔，然後執行
+
+# create directories for test results if they do not exist
+mkdir -p "$1/grp"
+mkdir -p "$1/valgrind"
+
 for test in $(find "$1/build" -name "ut*" ! -name "*.*")
 do
-    $test --gtest_output=json:"./tmp/isolate-runner/$(basename $test).json" > /dev/null; echo Return $?
-    valgrind --error-exitcode=2 --track-origins=yes --leak-check=full --log-fd=9 9>./tmp/isolate-runner/$(basename $test).log $test > /dev/null
-    python3 ./grp-parser.py ./tmp/isolate-runner/$(basename $test).json
+    $test --gtest_output=json:"$1/grp/$(basename $test).json" > /dev/null; echo Return $?
+    valgrind --error-exitcode=2 --track-origins=yes --leak-check=full --log-fd=9 9>"$1/valgrind/$(basename $test).log" $test > /dev/null
 done

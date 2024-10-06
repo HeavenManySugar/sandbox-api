@@ -1,4 +1,4 @@
-import queue
+import os
 import shutil
 from contextlib import asynccontextmanager
 
@@ -6,15 +6,17 @@ from dotenv import dotenv_values
 from fastapi import FastAPI
 
 from .routers import sandbox
+from .sandbox.judge import JudgeSystem
 from .utils.isolate import cleanup_sandbox, init_sandbox
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Do something at the start of the lifespan
+    if not os.path.exists('./result'):
+        os.makedirs('./result')
+
     app.state.available_box = set()
-    app.state.judging = {}
-    app.state.waiting = queue.Queue()
 
     SANDBOX_NUMBER = dotenv_values('.env')['SANDBOX_NUMBER']
     ENABLE_CGROUP = dotenv_values('.env')['ENABLE_CGROUP']
@@ -26,12 +28,13 @@ async def lifespan(app: FastAPI):
             print(r.stderr)
         else:
             app.state.available_box.add(i)
+    app.state.judge_system = JudgeSystem(app.state)
     yield
     # Do something at the end of the lifespan
     for i in range(int(SANDBOX_NUMBER)):
         print(f'Cleaning up sandbox {i}')
         cleanup_sandbox(box_id=i, cg=(ENABLE_CGROUP == 'True'))
-    # shutil.rmtree('/tmp/sandbox-api', ignore_errors=True)
+    shutil.rmtree('./result', ignore_errors=True)
 
 
 app = FastAPI(lifespan=lifespan)
